@@ -47,20 +47,15 @@ class Usuario {
 	}
 
 	public function loadById ($id) {
-		$sql = new sql();
+		$sql = new Sql();
 
 		$results = $sql->select ("select * from tb_usuario where idusuario = :ID", array (":ID=>$id" 
 
 		));
 
 		if (count ($results) > 0) {
-			$row = $results[0];
-
-			$this->setIdusuario($row['idusuario']);
-			$this->setDeslogin($row['deslogin']);
-			$this->setDessenha($row['dessenha']);
-			$this->setDtcadastro($row['dtcadastro']); 
-			// Passado o DateTime no dtcadastro para passar informando sobre o horário
+			$this->setData($results[0]);    
+		
 		}
 
 	}
@@ -87,23 +82,44 @@ class Usuario {
 	
 	public function login ($login, $password) {
 
-		$sql = new sql();
+		$sql = new Sql();
 
 		$results = $sql->select("select * from tb_usuario where deslogin = :LOGIN and dessenha = :PASSWORD", array (
 			":LOGIN"=>$login, 
-			":PASSWORD"=>$password
+			":PASSWORD "=>$password
 
 		));
 
 		if (count ($results) > 0) {
-			$row = $results[0];
-
-			$this->setIdusuario($row['idusuario']);
-			$this->setDeslogin($row['deslogin']);
-			$this->setDessenha($row['dessenha']);
-			$this->setDtcadastro($row['dtcadastro']); 
+			$this->setData($results[0]);
 
 		}
+	} 
+
+	public function setData($data) {
+
+		$this->setIdusuario($data['idusuario']);
+		$this->setDeslogin($data['deslogin']);
+		$this->setDessenha($data['dessenha']);
+		$this->setDtcadastro($data['dtcadastro']);    
+
+	}
+
+	public function insert () {
+
+		$sql = new Sql();
+		$results = $sql->select("CALL sp_usuario_insert(:LOGIN, :PASSWORD)", array (
+			//Criando uma procedure, para isso é usado a palavra CALL
+
+			':LOGIN'=>$this->getDeslogin(),
+			':PASSWORD'=>$this->getDessenha()
+
+		));
+
+		if (count($results) > 0 ) {
+			$this->setData($results[0]);
+		}
+
 	}
 
 	public function __toString() {

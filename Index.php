@@ -16,9 +16,20 @@
 	//echo json_encode ($search);
 
 	//Carrega um usuário usando o login e a senha
-	$usuario = new Usuario();
-	$usuario->login("root", 12345);
+	//$usuario = new Usuario();
+	//$usuario->login("root", 12345);
+	//echo $usuario;
 
-	echo $usuario;
+	$aluno = new Usuario();
+	// Precisei comentar o código acima e em seguida vou fazer o insert de um usuário novo
+	
+	$aluno->setDeslogin("aluno");
+	$aluno->setDessenha("123456");
+
+	$aluno->insert();
+	// O cadastro ñ tem ID e a data de cadastro, mas esses dados serão puxados como resposta por causa do meu procedure
+
+	echo $aluno;
+	
 
  ?>
